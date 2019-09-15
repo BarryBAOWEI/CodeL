@@ -1,0 +1,620 @@
+#########
+http://blog.csdn.net/longerzone/article/details/37574053
+
+python常用的时间模块之time
+Python 没有包含对应日期和时间的内置类型，不过提供了3个相应的模块，可以采用多种表示管理日期和时间值：
+*    time 模块由底层C库提供与时间相关的函数。它包含一些函数用于获取时钟时间和处理器的运行时间，还提供了基本解析和字符串格式化工具   
+*    datetime 模块为日期、时间以及日期时间值提供一个更高层接口。datetime 中的类支持算术、比较和时区配置。 
+*    calendar 模块可以创建周、月和年的格式化表示。它还可以用来计算重复事件、给定日期是星期几，以及其他基于日历的值。
+
+
+time - 时钟时间模块。我们使用apihelper.info（可以参考系列前面文章《Python 学习笔记 9 -- Python强大的自省简析》）查看time 类，可以得知time 模块主要有以下方法：
+
+1. time
+
+核心函数，返回值是以浮点数计的自纪元开始以来的秒数，用于比较或者计算还是比较方便。
+
+2. ctime
+
+如果你想打印日期或者时间信息，使用 ctime 要比time 更加方便：
+    >>> time.ctime()
+    'Tue Jul  8 15:26:21 2014'
+我们可以看到 ctime 返回的是可读的可直接用于记录时间的字符串形式时间信息。
+
+我们还可以使用 ctime 来格式化打印一个由 time 计算的时间值：
+    >>> print "Now time is   :",time.ctime() ;  later = time.time()+15 ;  print "15 secs later :", time.ctime(later)
+    结果是：
+        Now time is   : Tue Jul  8 15:28:54 2014
+        15 secs later : Tue Jul  8 15:29:09 2014
+
+3. clock 
+
+处理器时钟，可以用来计算程序使用的实际时间，评估性能。
+    >>> print 123456789*123456789/987654, time.clock()      
+    15432103500 0.08
+    >>> print 123456789*123456789/987654321, time.clock()
+    15432098 0.09
+    >>> print (123456789*123456789+ 1234567890/987654321)*123456, time.clock()
+    1881664346183521084032 0.11
+    >>> print (123456789*123456789+ 1234567890/987654321)*123456, time.clock()     # 与上面同样复杂的运算，放在主频比较低的树莓派上运行，cpu 耗时要长很多
+    1881664346183521084032 3.49
+
+4. gmtime, localtime 和tzset
+
+先统一介绍一下这几个函数（后面结合实例会了解的更加清楚）：
+time.gmtime([secs])  --参数为一个以秒表示的时间值，gmtime 函数将参数转化并返回一个 struct_time 结构（见本文最后一节）的时间信息，且gmtime转化得到的时间是UTC 时间（世界统一时间）。如果没有使用一个秒数作为参数，将会默认使用并转化当前时间(即time.time()), 所以直接使用 time.gmtime() 会得到当前UTC 时间，效果同 time.gmtime(time.time())。
+time.localtime([secs])  -- 函数使用以及作用都与gmtime 类似，但是转化的结果是本地时间。也就是说它转化的结果是符合当前设置的时区信息的本地时间。同样，如果没有参数，默认转化的也是当前时间(即time.time())，所以直接使用 time.localtime() 会得到当前的本地时间，效果同 time.localtime(time.time())。
+
+time.tzset()  -- 设置时区从而改变了上面两个函数的时间转化的规则。
+
+而对于 时区的选择，我们可以查看参考Linux 的 "/usr/share/zoneinfo/" 目录：
+$ ls /usr/share/zoneinfo/
+Africa      Australia  Cuba     Etc      GMT0       Iceland      Japan      MST      Poland      right      UCT        zone.tab
+America     Brazil     EET      Europe   GMT-0      Indian       Kwajalein  MST7MDT  Portugal    ROC        Universal  Zulu
+Antarctica  Canada     Egypt    Factory  GMT+0      Iran         Libya      Navajo   posix       ROK        US
+Arctic      CET        Eire     GB       Greenwich  iso3166.tab  localtime  NZ       posixrules  Singapore  UTC
+Asia        Chile      EST      GB-Eire  Hongkong   Israel       MET        NZ-CHAT  PRC         SystemV    WET
+Atlantic    CST6CDT    EST5EDT  GMT      HST        Jamaica      Mexico     Pacific  PST8PDT     Turkey     W-SU
+此外，对于时区的划分以及使用我可能解释不清，而且也不想占用此篇文章的篇幅，想了解的请点这里
+
+你需要理解的是：
+UTC 指的是Coordinated Universal Time－ 世界协调时间（又称世界标准时间、世界统一时间），是经过平均太阳时(以格林威治时间GMT为准)、地轴运动修正后的新时标以及以「秒」为单位的国际原子时所综合精算而成的时间，计算过程相当严谨精密。
+中国一般使用CST 时间，解释为“China Standard Time UT+8:00” ，即标准的UTC 时间加8！
+
+对于时区的设置以及localtime 显示的信息：
+    >>> time.gmtime()       # 直接使用，默认转化当前时间time.time()并返回 struct_time 结构的 UTC 时间
+    time.struct_time(tm_year=2014, tm_mon=7, tm_mday=9, tm_hour=1, tm_min=56, tm_sec=28, tm_wday=2, tm_yday=190, tm_isdst=0)
+    >>> time.localtime()    # 返回当前的本地时间
+    time.struct_time(tm_year=2014, tm_mon=7, tm_mday=9, tm_hour=9, tm_min=56, tm_sec=32, tm_wday=2, tm_yday=190, tm_isdst=0)
+    >>> os.environ['TZ'] =  'Brazil/East'    # 既然在世界杯期间，不妨设置看看巴西时间
+    >>> time.tzset()        # 设置时区
+    >>> time.gmtime()       # 我们可以看到设置时区后对UTC 时间并无干扰
+    time.struct_time(tm_year=2014, tm_mon=7, tm_mday=9, tm_hour=1, tm_min=57, tm_sec=42, tm_wday=2, tm_yday=190, tm_isdst=0)
+    >>> time.localtime()    # 本地时间已经显示的不同了，因为当前输出的是巴西时间
+    time.struct_time(tm_year=2014, tm_mon=7, tm_mday=8, tm_hour=22, tm_min=57, tm_sec=49, tm_wday=1, tm_yday=189, tm_isdst=0)
+    >>> os.environ['TZ'] =  'Asia/Shanghai'     #重新设置时区为上海（好像没有北京时间，安装Linux 时小伙伴应该都注意过这个问题。），回到北京时间
+    >>> time.tzset()
+    >>> time.gmtime()
+    time.struct_time(tm_year=2014, tm_mon=7, tm_mday=9, tm_hour=1, tm_min=58, tm_sec=7, tm_wday=2, tm_yday=190, tm_isdst=0)
+    >>> time.localtime()
+    time.struct_time(tm_year=2014, tm_mon=7, tm_mday=9, tm_hour=9, tm_min=58, tm_sec=10, tm_wday=2, tm_yday=190, tm_isdst=0)
+    >>> time.tzname         # 中国的时区名为 CST，理解为“China Standard Time UT+8:00”
+    ('CST', 'CST')
+
+
+5. strptime 和 strftime
+
+这两个函数用来解析和格式化输出时间。用作字符串格式的时间与 struct_time 结构的时间之间的转化。
+
+对于上面的localtime ，我们可以看到输出结果是一个 struct_time 结构体并以元组格式打印，我们可以使用" time.localtime().tm_year " 这样单独取其中一项。
+所以我们打印日期时可以这样：
+>>> print "%s-%s-%s" % (time.localtime().tm_year, time.localtime().tm_mon, time.localtime().tm_mday)
+2014-7-8
+
+而ctime 输出的结果是字符串形式， 对于这种的我们可以使用这两个函数来解析/格式化:
+
+strftime 用于将元组转化为字符串, 它将指定的struct_time(默认为当前时间)，根据指定的格式化字符串输出。
+    >>> time.localtime()    # 我们可以知道，localtime 打印的结果是元组形式的时间结构体
+    time.struct_time(tm_year=2014, tm_mon=7, tm_mday=8, tm_hour=16, tm_min=13, tm_sec=9, tm_wday=1, tm_yday=189, tm_isdst=0)
+    >>> time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())    # 使用格式化打印，我们可以看到比上面使用元组项要方便很多
+    '2014-07-08 16:13:10'
+
+strptime 用于将字符串格式的格式化为元组：
+    >>> time.ctime()
+    'Tue Jul  8 16:16:32 2014'
+    >>> time.strptime(time.ctime())
+    time.struct_time(tm_year=2014, tm_mon=7, tm_mday=8, tm_hour=16, tm_min=16, tm_sec=45, tm_wday=1, tm_yday=189, tm_isdst=-1)
+    >>> time.strftime( '%Y-%m-%d %H:%M:%S', time.strptime(time.ctime()))        # 格式化之后我们再使用strftime 格式化打印成我们想要的格式就很方便了！！！
+    '2014-07-08 16:17:29'
+
+
+time.strftime 的使用格式为：
+        strftime(format[, tuple])
+里面有很多参数，可以让你能够更随意的输出自己想要的东西：
+        %y 两位数的年份表示（00-99）
+        %Y 四位数的年份表示（000-9999）
+        %m 月份（01-12）
+        %d 月内中的一天（0-31）
+        %H 24小时制小时数（0-23）
+        %I 12小时制小时数（01-12）
+        %M 分钟数（00=59）
+        %S 秒（00-59）
+        
+        %a 本地简化星期名称
+        %A 本地完整星期名称
+        %b 本地简化的月份名称
+        %B 本地完整的月份名称
+        %c 本地相应的日期表示和时间表示
+        %j 年内的一天（001-366）
+        %p 本地A.M.或P.M.的等价符
+        %U 一年中的星期数（00-53）星期天为星期的开始
+        %w 星期（0-6），星期天为星期的开始
+        %W 一年中的星期数（00-53）星期一为星期的开始
+        %x 本地相应的日期表示
+        %X 本地相应的时间表示
+        %Z 当前时区的名称
+        %% %号本身
+
+6. sleep
+
+休眠函数， 任何语言中基本上都会有休眠函数，而python 中对应的就是 time.sleep(n)。携带的参数指定挂起执行程序的秒数。
+为了更精确休眠的时间参数可以是一个浮点数。实际的挂起时间可能小于请求的数，因为捕获其他信号会终止休眠并执行信号对应的捕获程序。挂起时间也有可能比要求的更长，因为可能会调度系统中的其他活动。
+
+7. mktime
+
+这是 localtime 的逆函数。它的参数是 struct_time 结构或者完整的9 元素的元组（如果使用元组，需要dst 标识，如果不知可以使用-1）。为了兼容time(),它会返回一个浮点数。如果参数不能被表示为一个有效的时间，会引发OverflowError 或者 ValueError错误。
+    >>> t = time.time()
+    >>> t
+    1404867269.117389
+    >>> time.localtime(t)   # 上面已说过，使用time.localtime 可以将time() 生成的浮点数转化为 struct_time 结构
+    time.struct_time(tm_year=2014, tm_mon=7, tm_mday=9, tm_hour=8, tm_min=54, tm_sec=29, tm_wday=2, tm_yday=190, tm_isdst=0)
+    >>> time.mktime(time.localtime(t))
+    1404867269.0            # 我们可以看到time.mktime 将 struct_time 结构再次还原为浮点数，其中因为 struct_time 结构中最小值为 tm_sec，也就是说最小时间精度为秒。所以使用 mktime 得到的浮点数中，秒以下的数（毫秒，微秒）被抹去。
+    >>> time.mktime( (2014, 7, 9, 8, 54, 29, 2, 190, -1) )    # 使用上面结构体中的数（dst使用-1表示未知）组成的9元素的元组，mktime 能够还原出同样的值
+    1404867269.0
+
+8. struct_time 结构
+
+最后介绍一下 time.struct_time 类：
+    time 的gmtime(), localtime(), 以及 strptime()方法获取的时间值类型是一个struct_time 类。它是一个命名的元组对象：元素可以通过index获取，或者是通过属性名称：
+    >>> time.localtime()
+    time.struct_time(tm_year=2014, tm_mon=7, tm_mday=8, tm_hour=22, tm_min=9, tm_sec=1, tm_wday=1, tm_yday=189, tm_isdst=0)
+    >>> time.localtime()[1]
+    7
+    >>> time.localtime().tm_mon
+    7
+    目前这个结构中有以下元素：
+
+time.struct_time 结构
+0	tm_year	(for example, 1993)（下注）
+1	tm_mon	range [1, 12]（下注）
+2	tm_mday	range [1, 31]
+3	tm_hour	range [0, 23]
+4	tm_min	range [0, 59]
+5	tm_sec	range [0, 61]（下注）
+6	tm_wday	range [0, 6], Monday is 0
+7	tm_yday	range [1, 366]
+8	tm_isdst	0, 1 or -1; see below
+
+
+
+
+
+
+
+
+
+
+
+   
+如果在函数中使用该元组时使用了错误的长度或者使用错误的类型，会引发TypeError 错误。
+注：
+上面表中，tm_sec 中的取值范围为 0～61， 这并不是写错了！是考虑了闰秒和双闰秒的因素（非常少见）。(关于闰秒，英文leap seconds，这是来自百度百科的解释： 闰秒是指为保持协调世界时接近于世界时时刻，由国际计量局统一规定在年底或年中对协调世界时增加或减少1秒>的调整。由于地球自转的不均匀性和长期变慢性，会使世界时（民用时）和原子时之间相差超过到±0.9秒时，就把世界时向前拨1秒（负闰秒，最后一分钟为59秒）或向后拨1秒（正闰秒，最后一分钟为61秒）)
+与C 结构不同，月对应的值范围是1～12，而不是0～11。
+年的值需要注意以下问题：Python 依赖于平台的C 库，C 库一般是没有2000年的问题的，因为所有的日期和时间都内在的代表自时代以来的秒。函数接收上面一个struct_time 结构，其中需要4位来表示年。为了向后兼容，如果模块变量accept2dyear 是一个非零整数，支持使用2位来表示年；而这个变量会被初始化为1，除非环境变量PYTHONY2K 被设置为一个非空的字符串，之后PYTHONY2K 被设置时变量 accept2dyear 才会被初始化为0。
+因此，你可以将PYTHONY2K 设置为一个非空字符串从而使得python 对于任何年的输入都使用4位来表示。否则，如果使用的是2位表示年，将会根据POSIX 或者X/Open 标准来转换：69～99 被映射为1969～1999，而0～68 被映射为2000～2068。(此问题在Python的 time模块介绍中标记为“Year 2000 (Y2K) issues” )
+
+
+=======================================
+注：本文只介绍了 time 模块，其他的时间模块还有 datetime 和calendar 迫于篇幅限制（排版过于繁琐），以及电脑配置限制（AMD速龙+2G内存，即使跑的Linux太长的文章上下翻动感觉页很卡）将于本系列下面两篇介绍。
+更多关于 time 模块的相关内容请参考Python 官方文档
+=======================================
+注： 转载注明出处： http://blog.csdn.net/longerzone
+
+#################
+http://blog.csdn.net/longerzone/article/details/37574367
+python常用的时间模块之datetime
+
+书接上文，前面我们讲到《常用的时间模块之time》，这次我们学习datetime -- 日期和时间值管理模块
+
+使用apihelper 查看datetime 模块，我们可以看到简单的几项：
+date       ---  日期对象，结构为date(year, month, day)
+time       ---  时间值对象，结构为 time([hour[, minute[, second[, microsecond[, tzinfo]]]]])。时间对象所有的参数都是可选的。tzinfo 可以是None 或者是tzinfo子类的一个实例。 
+datetime   ---  日期和时间管理对象，结构为 datetime(year, month, day[, hour[, minute[, second[, microsecond[,tzinfo]]]]])。 其中year, month 以及day 参数是必需的。而tzinfo 可以是None 或者是tzinfo子类的一个实例。
+timedelta  ---  两个datetime 值的差。用作datetime 对象之间的计算以及比较。
+tzinfo     ---  时区信息对象的抽象基类。
+            
+
+我们可以看到datetime 模块下面还有好几个具体的类，下面分别从这几个类来分析datetime 模块：
+1. date
+
+1.1 date 类简介以及简单使用
+
+date 是一个日期对象类，它有year,month和day三个属性。使用today()方法很容易创建一个表示当前日期的日期对象。当然，我们也可以手动指定年月日，从而直接使用datetime.date(year, month, day) 来创建一个日期对象，如：
+    >>> da = datetime.date(1991, 1, 1)
+    >>> da
+    datetime.date(1991, 1, 1)
+    >>> da.year                    # 还可以通过指定具体项获取对应值
+    1991
+
+我们再来看看date 类的相关信息：
+    >>> print datetime.date.resolution        # 日期对象的分辨率是一天
+    1 day, 0:00:00
+    >>> print datetime.date.min                # 日期对象最小值是1-1-1，下面会提到 toordinal 函数，它的返回值就是从这天计算的
+    0001-01-01
+    >>> print datetime.date.max                # 最大值
+    9999-12-31
+
+date 对象之间是可以计算的，算算你到这个世界多久了？
+    >>> bron_day = datetime.date(1991, 1, 1)    # 指定生日
+    >>> today = datetime.date.today()            # 获取今天的date 信息
+    >>> print today-bron_day                    
+    8590 days, 0:00:00                            # date 对象之间直接相减，得到以日计算的差值
+    >>> today < bron_day                        
+    False                                        # 还可以直接对date 对象进行比较
+
+1.2 date 类提供的方法
+
+下面我们仍然使用apihelper (使用见《python 学习笔记 9 -- Python强大的自省简析》)来查看date 类还提供了哪些强大的方法：
+
+(1) today  
+
+以当前时间获取一个日期对象
+    >>> today = datetime.date.today()
+    >>> today
+    datetime.date(2014, 7, 8)
+
+(2) ctime  
+
+将一个日期对象转化为ctime() 形式的字符串
+    >>> date.date.ctime(today)
+    'Tue Jul  8 00:00:00 2014'
+
+(3) replace   
+
+对于日期对象，支持使用replace 方法直接修改具体项：
+    >>> da = datetime.date(2008, 10, 1)
+    >>> print da
+    2008-10-01
+    >>> print da.replace(2001, 1, 1)        # 不指定，可全部进行修改
+    2001-01-01
+    >>> print da.replace(year=2009, day=13)    # 符合python 的参数习惯，可以指定修改某一参数
+    2009-10-13
+
+(4) isoformat 
+
+以ISO 8601 格式("YYYY-MM-DD")返回一个日期对象：
+    >>> datetime.date.isoformat(today)
+    '2014-07-08'
+(5) weekday 和 isoweekday
+
+weekday   -- 返回日期对象是周几。注意：返回值从0～6 ，也就是说Monday == 0 ... Sunday == 6。
+isoweekday --返回日期对象是周几，但是isoweekday 返回值与weekday的返回值不一样，其返回值范围为1～7：Monday == 1 ... Sunday == 7。
+    >>> time.ctime()
+    'Wed Jul  9 11:24:58 2014'        # 今天是周三
+    >>> today.weekday()
+    2                                # 使用weekday 获取的返回值是2，因为它从0开始计数，周三对应2。
+    >>> today.isoweekday()            # 使用isoweekday 获取的是3，符合日常使用习惯。
+    3
+
+(6) isocalendar
+
+返回一个3元元组，值分别表示（年，第几周，周几）
+    >>> today.isocalendar()
+    (2014, 28, 3)    
+
+(7) strftime 
+
+与time.strftime 类似，用于将时间对像进行格式化转化：
+    >>> today.strftime('%Y-%m-%d %H:%M:%S')
+    '2014-07-09 00:00:00'            # 至此，我们才发现默认使用 today = datetime.date.today() 获取今天日期对象，只获取了日期信息，而对应的时间默认使用了 00:00:00，后面我们会介绍使用 datetime 对象将日期对象和时间对像结合！
+注：下面介绍的对象中都会涉及到 strftime 或 strptime, 其实用法都和前面 time 模块中介绍的一样，具体参数意义也请参见《python 学习笔记 13 -- 常用的时间模块之time》
+
+(8) timetuple
+
+以时间结构体 struct_time 形式返回时间信息，与time.localtime()兼容：
+    >>> today.timetuple()
+    time.struct_time(tm_year=2014, tm_mon=7, tm_mday=9, tm_hour=0, tm_min=0, tm_sec=0, tm_wday=2, tm_yday=190, tm_isdst=-1)
+
+(9) fromtimestamp
+
+此函数能够解析time.time()返回的浮点值，返回一个datetime.date 日期值，格式为"datetime.date(2014, 7, 8)", 所以我们可以通过datetime.date.fromtimestamp(time.time()).year 来获取年（月，日亦可！）
+    >>> time.time()
+    1404876430.573843
+    >>> datetime.date.fromtimestamp(1404876430)
+    datetime.date(2014, 7, 9)
+    >>> datetime.date.fromtimestamp(1404876430.0)
+    datetime.date(2014, 7, 9)
+    >>> datetime.date.fromtimestamp(1404876430.0).year
+    2014
+
+(10)  toordinal 和fromordinal
+
+toordinal -- 返回日期对象位于公历的序数，也就是说返回值是“ 时间对象是从1年1月1日起的第几天”（返回值是一个整数）。
+fromordinal -- 上面的toordinal 会将一个日期对象经过计算，返回这个日期是1年1月1日开始的第几天。而fromordinal 功能刚好与toordinal相反，它可以计算出一个给定的整形数对应的日期对象。
+    >>> today.toordinal()
+    735423
+    >>> datetime.date.fromordinal(735423)
+    datetime.date(2014, 7, 9)
+
+
+2. time
+
+2.1 time 类简介以及简单使用
+
+datetime 的 time类用来表示时间信息，如上面介绍的date 类，我们可以使用time([hour[, minute[, second[, microsecond[, tzinfo]]]]]) 来初始化时间对象。
+我们再来看看time 类的相关信息：
+    >>> print datetime.time.min            # 合法时间范围为00:00:00 ～ 23:59:59.999999
+    00:00:00
+    >>> print datetime.time.max
+    23:59:59.999999
+    >>> print datetime.time.resolution    # 分辨率限制为微秒级
+    0:00:00.000001
+
+我们也可以直接指定项获取其内容：
+    >>> ti = datetime.time(11, 36, 0)
+    >>> ti.hour
+    11
+
+2.2 time 类提供的方法
+
+下面我们仍然使用apihelper来查看time 类提供了哪些强大的方法：
+(1) isoformat  
+
+以 ISO 8601 格式(HH:MM:SS[.mmmmmm][+HH:MM].)返回时间值：
+    >>> ti.isoformat()
+    '15:10:20'
+
+(2) replace 
+
+与上面的日期类中的replace 方法类似，用于替换日期对象中的值：
+    >>> ti = datetime.time(15, 10, 20)
+    >>> ti.replace(hour = 12)
+    datetime.time(12, 10, 20)
+
+(3) strftime   
+
+如同上面的strftime 方法，以自定义的格式打印信息：
+    >>> ti.strftime('%Y-%m-%d %H:%M:%S')
+    '1900-01-01 15:10:20'        # 看来未指定年月日，系统默认是1900-01-01
+
+其他还有三个方法： dst, tzname, utcoffset ,一般应该用不上，这里就不介绍了！
+
+
+
+3. datetime
+
+3.1 datetime 类简介以及简单使用
+
+使用datetime 类可以存储由日期和时间分量构成的值。
+
+我们先看看预定给datetime 类的一些细节： 
+    >>> print datetime.datetime.resolution        # 同time， datetime 的精度为一微秒
+    0:00:00.000001
+    >>> print datetime.datetime.min                # datetime 最小值为0001年1月1日的0时0分0秒，这也是公历的起始
+    0001-01-01 00:00:00
+    >>> print datetime.datetime.max                # 最大值
+    9999-12-31 23:59:59.999999
+同上面date/time， datetime 也可以直接手动定义：" datetime(year, month, day[, hour[, minute[, second[, microsecond[,tzinfo]]]]])" 其中year, month 以及day 参数是必需的。
+    >>> datetime.datetime(2008, 11, 20, 10, 50)
+    datetime.datetime(2008, 11, 20, 10, 50)
+    >>> print datetime.datetime(2008, 11, 20, 10, 50).time()    # 可以直接使用time 和date 获取datetime 的时间和日期信息。
+    10:50:00
+    >>> print datetime.datetime(2008, 11, 20, 10, 50).time().hour    # 想要获取时间/日期信息下面的时分秒/年月日就要在使用time/date 之后再使用需要的项来获取。
+    10
+
+对于datetime 的十几种方法，我们按照官方手册将其分为“类方法”和“实例方法”两个方面来讲解：
+3.2 类方法：
+
+类方法可以理解成通过 datetime.datetime.**() 调用的方法，如：
+    now = datetime.datetime.now()
+=====================================================
+(1) today, now 和 utcnow
+
+ today      -- today 方法可以获取当前日期和时间(没有时区信息)，等于datetime.datetime.fromtimestamp(time.time())。
+ now([tz])  -- 返回当前日期和时间，如果没有使用tz 作为参数，其结果与today方法一样；如果有时区信息，则返回的时区对应的时间(注：这里要求的tz 是tzinfo 类的一个实例而不是一个字符串)。
+ utcnow     -- 方法与now 类似，只不过提供的是UTC 时间。（UTC，Coordinated Universal Time ，世界标准时间, now 得到的时间是根据UTC时间加上时区的）
+    >>> datetime.datetime.now()
+    datetime.datetime(2014, 7, 8, 20, 34, 59, 121292)
+    >>> datetime.datetime.today()        # today 和now 获取的时间一致
+    datetime.datetime(2014, 7, 8, 20, 35, 0, 565851)
+    >>> datetime.datetime.utcnow()        # UTC 时间当前为12点，而我们北京时间处于东8区，加8个小时，刚好等于now/today显示的20点
+    datetime.datetime(2014, 7, 8, 12, 35, 6, 89866)
+
+(2) fromtimestamp 和 utcfromtimestamp
+
+ fromtimestamp(timestamp[, tz])  -- fromtimestamp 根据POSIX 的时间戳（比如time.time()）返回一个时间信息。与now 比较接近，如果没有携带'tz'参数，它会将时间戳转化为本地时间和日期；如果有时区信息'tz'，返回的是该时区的时间信息。
+ utcfromtimestamp(timestamp)     -- 将时间戳转化为UTC 时间
+    >>> datetime.datetime.utcfromtimestamp(time.time())
+    datetime.datetime(2014, 7, 9, 6, 42, 3, 395073)
+    >>> datetime.datetime.fromtimestamp(time.time())        # 本地时间，CST 比UTC时间多8小时
+    datetime.datetime(2014, 7, 9, 14, 42, 7, 528134)    
+    >>> datetime.datetime.today()                            # 上面介绍today 时说了，today()的返回值与fromtimestamp(time.time())一样
+    datetime.datetime(2014, 7, 9, 14, 42, 19, 450996)        
+
+(3) fromordinal
+
+fromordinal -- 与下面要介绍的实例方法toordinal 相反，实例方法toordinal会将一个datetime 对象返回值为自公历1年1月1日起的第几天，而fromordinal 将一个天数（整形）计算出来对应的哪年哪月哪日。
+    >>> now
+    datetime.datetime(2014, 7, 8, 20, 41, 2, 882183)
+    >>> datetime.datetime.toordinal(now)
+    735422
+    >>> datetime.datetime.fromordinal(735422)        # 因为toordinal 计算的只是第几天，未涉及到具体时间，所以fromordinal 转化后的时间为0:0:0
+    datetime.datetime(2014, 7, 8, 0, 0)
+
+(4) combine
+
+conbine 方法可以将一个date 实例和一个time 实例结合创建一个datetime 实例。
+    >>> today = datetime.date.today()
+    >>> today.strftime('%Y-%m-%d %H:%M:%S')
+    '2014-07-09 00:00:00'            # 使用 date.today() 只会接收今天的日期，不会接收时间信息，时间默认使用 00:00:00
+    >>> now = datetime.time(12, 30, 00)
+    >>> now.strftime('%Y-%m-%d %H:%M:%S')
+    '1900-01-01 12:30:00'            # 使用time 设置时间后，日期默认使用 1900-01-01
+    >>> print datetime.datetime.combine(today, now)
+    '2014-07-09 12:30:00'            # 使用datetime 的combine 方法可以将上面的日期实例和时间实例集合为一个datetime 实例。
+
+
+(5) strptime
+
+同前面介绍time 中的strptime一样，strptime 可以将一个格式化打印的字符串整合成为原来的datetime 对象。
+    >>> now = datetime.datetime.now()
+    >>> now
+    datetime.datetime(2014, 7, 9, 15, 54, 17, 742398)
+    >>> now.strftime('%Y-%m-%d %H:%M:%S')        # 下面将要介绍的一个实例方法，其实和time.strftime 类似
+    '2014-07-09 15:54:17'     # 此时是一个格式化打印的字符串\
+    >>> datetime.datetime.strptime(now.strftime('%Y-%m-%d %H:%M:%S'), '%Y-%m-%d %H:%M:%S')
+    datetime.datetime(2014, 7, 9, 15, 54, 17)             # 使用strptime 将字符串还原为 datetime 对象
+
+3.3 实例方法：
+
+实例方法可以理解成datetime 实例/对象调用的方法，如：
+    now = datetime.datetime.now()
+    now.***();        ### 其中*** 对应的就是实例方法 
+其实也可以使用datetime.datetime.***(now)来调用。举个例子：
+
+    >>> now.date()    # date 就是下面要讲的实例方法之一
+    datetime.date(2014, 7, 9)
+    >>> datetime.datetime.date(now)    # 实例方法也可以通过类似于类方法那么调用，只不过需要实例/对象作为参数
+    datetime.date(2014, 7, 9)
+既然放在实例方法一节，下面例子中都使用 now.***() 方式调用。
+==============================================
+
+(1)date   
+
+返回datetime.datetime对象的日期值
+    >>> now = datetime.datetime.now()
+    >>> now.date()
+    datetime.date(2014, 7, 9)
+
+(2) time 和 timetz
+
+ time       --将一个datetime.datetime 对象的时间值返回
+ timetz     -- 使用相同的时间和时区返回time 对象
+    >>> now.time()
+    datetime.time(14, 48, 2, 224132)
+    >>> now.timetz()
+    datetime.time(14, 48, 2, 224132)
+
+(3) replace   
+
+可以指定修改域对datetime 实例进行修改：
+    >>> utcnow = datetime.datetime.utcnow()
+    >>> utcnow
+    datetime.datetime(2014, 7, 8, 12, 37, 21, 59472)
+    >>> utcnow.replace(hour = 1)
+    datetime.datetime(2014, 7, 8, 1, 37, 21, 59472)
+
+(4) timetuple 和 utctimetuple
+
+ timetuple  --将一个datetime.datetime 对象解析成一个struc_time结构体返回。（与time.localtime()的返回值类型一样）
+ utctimetuple  -- 与上面timetuple类似，返回UTC时间的解析结构体
+    >>> now.timetuple()
+    time.struct_time(tm_year=2014, tm_mon=7, tm_mday=9, tm_hour=14, tm_min=48, tm_sec=2, tm_wday=2, tm_yday=190, tm_isdst=-1)
+    >>> now.utctimetuple()
+    time.struct_time(tm_year=2014, tm_mon=7, tm_mday=9, tm_hour=14, tm_min=48, tm_sec=2, tm_wday=2, tm_yday=190, tm_isdst=0)
+    >>> time.localtime(time.time())            # 使用time.localtime 解析time()的浮点数得到的结果同timetuple 一样，都是struct_time 结构的时间
+    time.struct_time(tm_year=2014, tm_mon=7, tm_mday=9, tm_hour=14, tm_min=51, tm_sec=12, tm_wday=2, tm_yday=190, tm_isdst=0)
+
+(5) toordinal     
+
+返回一个整数，代表datetime.datetime 对象是从第1年第1月第1天算起的第几天。
+
+(6) weekday 和 isoweekday
+
+weekday    -- 返回datetime对象是周几，但是对应的值从0～6： Monday == 0 ... Sunday == 6
+isoweekday -- 返回datetime对象是周几，对应的值从1～7： Monday == 1 ... Sunday == 7
+    >>> now.ctime()                # 以ctime() 字符串形式打印datetime 对象的时间日期信息。下面会提到
+    'Wed Jul  9 14:48:02 2014'        # 周三
+    >>> now.weekday()    
+    2                                # 周三使用weekday 返回2
+    >>> now.isoweekday()    
+    3                                # isoweekday 返回3
+
+
+(7) isocalendar
+
+返回一个三值的元组，格式为(年，第几周，周几)
+    >>> now.isocalendar()
+    (2014, 28, 3)
+
+(8) isoformat
+
+以ISO 8601 格式（YYYY-MM-DDTHH:MM:SS[.mmmmmm][+HH:MM]）打印datetime.datetime对象。默认使用的间隔符是'T'.
+    >>> datetime.datetime.isoformat(now)
+    '2014-07-08T20:41:02.882183'
+
+(9) ctime
+
+ctime      -- 将datetime.datetime 对象解析成time.ctime 的字符串
+
+(10) strftime
+
+strftime   -- 同其他类一样，datetime 可以通过strftime 进行格式化打印成你想要的格式。（默认是用的是ISO-8601 格式：YYYY-MM-DDTHH:MM:SS.mmmmmm）
+    >>> now.strftime('%Y-%m-%d %H:%M:%S')
+    '2014-07-09 14:48:02'
+
+(11) 其他
+
+上面还未涉及到这几个函数astimezone, utcoffset, dst, tzname，都是与时区相关，一般涉及不到，此处不追逐。
+
+
+
+4. timedelta
+
+4.1 timedelta 类简介以及简单使用
+
+    datetime 对象之间可以使用算术运算，或者结合一个datetime 和一个timedelta ，可以用来计算过去或将来的一些日期。两个日期相减可以生成一个timedelta， 还可以对某个日期与一个timedelta 计算来得出另一个日期。所以可以理解成两个datetime 的中间变量，可以用于计算和比较。
+来看看timedelta 的精度以及范围：
+    >>> print datetime.timedelta.max
+    999999999 days, 23:59:59.999999
+    >>> print datetime.timedelta.min
+    -999999999 days, 0:00:00
+    >>> print datetime.timedelta.resolution        # 精度为1微秒
+    0:00:00.000001
+
+timedelta 的内部值按日、秒和毫秒存储：
+    >>> td = datetime.timedelta(microseconds = 1); print "%s -- %r" %(td, td)
+    0:00:00.000001 -- datetime.timedelta(0, 0, 1)
+    >>> td = datetime.timedelta(milliseconds = 1); print "%s -- %r" %(td, td)
+    0:00:00.001000 -- datetime.timedelta(0, 0, 1000)
+    >>> td = datetime.timedelta(seconds = 1); print "%s -- %r" %(td, td)
+    0:00:01 -- datetime.timedelta(0, 1)
+    >>> td = datetime.timedelta(minutes = 1); print "%s -- %r" %(td, td)
+    0:01:00 -- datetime.timedelta(0, 60)
+    >>> td = datetime.timedelta(hours = 1); print "%s -- %r" %(td, td)
+    1:00:00 -- datetime.timedelta(0, 3600)
+    >>> td = datetime.timedelta(days = 1); print "%s -- %r" %(td, td)
+    1 day, 0:00:00 -- datetime.timedelta(1)
+    >>> td = datetime.timedelta(weeks = 1); print "%s -- %r" %(td, td)
+    7 days, 0:00:00 -- datetime.timedelta(7)
+
+
+4.2 timedelta 类提供的方法
+
+    因为timedelta 只是一个用于计算的中间量，所以并没有提供很多方法，用apihelper 可以看到只提供一个方法total_seconds 用以返回一个timedelta 完整时间段的所有秒数:
+    >>> td = datetime.timedelta(hours = 1); print td.total_seconds()
+    3600.0
+
+4.3 使用timedelta 计算
+
+    >>> one_day = datetime.timedelta(days = 1);   # one_day 是一个定义为1天的timedelta 实例
+    >>> today = datetime.date.today()                   # today 是date 实例
+    >>> tomorrow = today + one_day              # 直接使用timedelta 实例与datetime 的date 实例进行计算
+    >>> yestoday = today - one_day
+    >>> today
+    datetime.date(2014, 7, 8)
+    >>> tomorrow
+    datetime.date(2014, 7, 9)
+    >>> yestoday
+    datetime.date(2014, 7, 7)
+    >>> tomorrow - yestoday            # 两个date 实例也可以计算
+    datetime.timedelta(2)
+    >>> print tomorrow - yestoday
+    2 days, 0:00:00
+
+4.4 使用timedelta 比较
+
+    >>> today > yestoday               # date 实例可以直接比较
+    True
+    >>> tomorrow == yestoday
+    False
+
+写到这，感觉该有的都有了，而且本文中有大量的例子，其实如果你不练习，还是难以记住这么多知识点，只要亲自写代码试验了，这些还是很好记很好理解的。比如说你可以做一个小闹钟提示什么的。
+==================================
+说在最后的话：
+其实悉心的你可以发现，datetime 类中还有 tzinfo 没有介绍，但是～～说实话，没怎么看懂，而且应该也用不上。此处不再赘述，还望谅解。
+
+=======================================
+注：本文介绍了 datetime 模块，其他的时间模块还有 time 和calendar 将于本系列其他文章。绝大部分内容都取自《Python 标准库》以及Python 官方文档, 限于个人能力有限，如有解释错误或者不当，敬请提出～
+注： 转载注明出处： http://blog.csdn.net/longerzone

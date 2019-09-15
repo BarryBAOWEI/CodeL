@@ -1,0 +1,610 @@
+http://www.google.com/finance/historical?q=GOOG&startdate=Mar+14%2C+2009&enddate=Apr+14%2C+2014&output=csv
+http://ichart.finance.yahoo.com/table.csv?s=^GSPC&a=0&b=1&c=2000&d=3&e=14&f=2014&g=d&ignore=.csv
+#########
+http://finance.yahoo.com/q/hp?s=^GSPC&a=0&b=1&c=2000&d=3&e=14&f=2014
+
+#symbols = ['^GDAXI', '^GSPC', 'AMZN', 'MSFT']
+#start='1/1/2014')['Adj Close']
+#11/7/2016   10/25/2017
+#https://finance.yahoo.com/quote/%5EGDAXI/history?ltr=1
+#https://finance.yahoo.com/quote/%5EGSPC/history?ltr=1
+#https://finance.yahoo.com/quote/%5EAMZN/history?ltr=1
+#https://finance.yahoo.com/quote/%5EMSFT/history?ltr=1
+http://finance.yahoo.com/q/hp?s=^GDAXI&a=0&b=1&c=2014&d=3&e=14&f=2016
+http://finance.yahoo.com/q/hp?s=^GSPC&a=0&b=1&c=2014&d=3&e=14&f=2016
+http://finance.yahoo.com/q/hp?s=AMZN&a=0&b=1&c=2014&d=3&e=14&f=2016
+http://finance.yahoo.com/q/hp?s=MSFT&a=0&b=1&c=2014&d=3&e=14&f=2016
+
+
+http://finance.yahoo.com/q/hp?s=YHOO&a=0&b=1&c=2014&d=3&e=14&f=2016
+
+
+
+http://finance.yahoo.com/q/hp?s=^GSPC&d=0&e=1&f=2000&a=5&b=11&c=2010
+
+http://ichart.finance.yahoo.com/table.csv?s=^GSPC&a=0&b=1&c=2000&d=3&e=14&f=2014&g=d&ignore=.csv
+###############
+http://blog.sina.com.cn/s/blog_50fe5cf10101ldz1.html
+
+https://zhidao.baidu.com/question/2075371041303175188.html
+http://finance.yahoo.com/d/quotes.csv?s=^GSPC&f=snd1l1yr
+http://finance.yahoo.com/d/quotes.csv?s=^GSPC&a=0&b=1&c=2000&d=3&e=14&f=2014&g=d&ignore=.csv
+&f=<数据列选项>
+
+http://ichart.finance.yahoo.com/table.csv?s=600000.SS&a=0&b=1&c=2000&d=3&e=14&f=2014&g=d&ignore=.csv
+http://ichart.yahoo.com/table.csv?s=^GSPC&a=0&b=1&c=2000&d=3&e=14&f=2014&g=d&ignore=.csv
+
+
+1、通过API获取实时数据
+请求地址
+http://finance.yahoo.com/d/quotes.csv?s=<股票名称>&f=<数据列选项>
+参数
+s –表示股票名称，多个股票之间使用英文加号分隔，如”XOM+BBDb.TO+JNJ+MSFT”，罗列了四个公司的股票：XOM,BBDb.TO, JNJ, MSFT。
+f – 表示返回数据列，如”snd1l1yr”。更详细的参见雅虎股票 API f参数对照表。
+2、通过API获取历史数据
+请求地址
+http://ichart.yahoo.com/table.csv?s=<string>&a=<int>&b=<int>&c=<int>&d=<int>&e=<int>&f=<int>&g=d&ignore=.csv
+参数
+s – 股票名称
+a – 起始时间，月
+b – 起始时间，日
+c – 起始时间，年
+d – 结束时间，月
+e – 结束时间，日
+f – 结束时间，年
+g – 时间周期。Example: g=w, 表示周期是’周’。d->’日’(day),w->’周’(week)，m->’月’(mouth)，v->’dividendsonly’
+一定注意月份参数，其值比真实数据-1。如需要9月数据，则写为08。
+3、通过API获取深沪股票数据
+雅虎的API是国际性的，支持查询国内沪深股市的数据，但代码稍微变动一下，如浦发银行的代号是：600000.SS。规则是：上海市场末尾加.ss，深圳市场末尾加.sz。
+最近股市甚火，受聘开发一股票网站，股票的数据从哪里来成了一个大问题，股票软件一般都是加密处理的，还有一些webservices也是要帐号 的，免费的方法只有一种了，抓别人网站的数据。好在经我研究，发现yahoo提供国内和国外股市每天的交易数据资料，这可谓一大幸事啊。
+http://table.finance.yahoo.com/table.csv?s=ibm&d=6&e=22&f=2006&g=d&a=11&b=16&c=1991&ignore=.csv
+上面的链接可以抓取IBM股票从1991年11月16日起到2006年6月22的数据。把ibm改成sohu，就可以抓到sohu的股票数据了。
+http://table.finance.yahoo.com/table.csv?s=sohu&d=6&e=22&f=2008&g=d&a=11&b=16&c=2008&ignore=.csv
+上面链接可以抓搜狐股票的数据。
+那么中国股市的数据有没有呢？答案是肯定的，不过要按照下面的参数做些调整，下面提供全球证券交易所的资料。
+上证股票是股票代码后面加上.ss，深证股票是股票代码后面加上.sz
+例如：000001 = 000001.sz
+深市数据链接：http://table.finance.yahoo.com/table.csv?s=000001.sz
+上市数据链接：http://table.finance.yahoo.com/table.csv?s=600000.ss
+上证综指代码：000001.ss，深证成指代码：399001.SZ，沪深300代码：000300.ss
+下面就是世界股票交易所的网址和缩写，要查找哪个股票交易所的数据，就按照上面的格式以此类推。
+上海交易所=cn.finance.yahoo.com,.SS,Chinese,sl1d1t1c1ohgv
+深圳交易所=cn.finance.yahoo.com,.SZ,Chinese,sl1d1t1c1ohgv
+美国交易所=finance.yahoo.com,,United States,sl1d1t1c1ohgv
+加拿大=ca.finance.yahoo.com,.TO,Toronto,sl1d1t1c1ohgv
+新西兰=au.finance.yahoo.com,.NZ,sl1d1t1c1ohgv
+新加坡=sg.finance.yahoo.com,.SI,Singapore,sl1d1t1c1ohgv
+香港=hk.finance.yahoo.com,.HK,Hong Kong,sl1d1t1c1ohgv
+台湾=tw.finance.yahoo.com,.TW,Taiwan,sl1d1t1c1ohgv
+印度=in.finance.yahoo.com,.BO,Bombay,sl1d1t1c1ohgv
+伦敦=uk.finance.yahoo.com,.L,London,sl1d1t1c1ohgv
+澳洲=au.finance.yahoo.com,.AX,Sydney,sl1d1t1c1ohgv
+巴西=br.finance.yahoo.com,.SA,Sao Paulo,sl1d1t1c1ohgv
+瑞典=se.finance.yahoo.com,.ST,Stockholm,sl1d1t1c1ohgv
+ 本回答由科学教育分类达人 甄好斌推荐 评论 20 1
+
+fringslinke 
+采纳率：92% 来自团队：柳浪闻莺 擅长： 保健养生
+其他回答
+使用 Yahoo，Finance stock API 获取股票数据：打开Yahoo Finance主页（这里不让贴url), 最左边有个小框框（quote lookup)，里面输入股票代码点击go就能查到即时股价
+
+
+如何使用 Yahoo! Finance stock API 获取股票数据  此博文包含图片	(2014-06-04 14:53:18)转载▼
+标签： 转载 	分类： R、VBA、Matlab、MySQL
+原文地址：如何使用 Yahoo! Finance stock API 获取股票数据作者：文和_好运来
+如何使用 Yahoo! Finance stock API 获取股票数据‘
+本站曾介绍过，通过代码添加雅虎财经的股票走势图到自己网站的方法（添加美国股市 ，添加沪深股市 ），调用的是一张图片。今天在德馨 网站，看到了从雅虎财经频道获取股票数据的API（Yahoo! Finance stock API），觉得 API 使用更广泛，作个转引。
+1、通过API获取实时数据
+请求地址
+http://finance.yahoo.com/d/quotes.csv?s=<股票名称>&f=<数据列选项>
+参数
+s – 表示股票名称，多个股票之间使用英文加号分隔，如”XOM+BBDb.TO+JNJ+MSFT”，罗列了四个公司的股票：XOM, BBDb.TO, JNJ, MSFT。
+f – 表示返回数据列，如”snd1l1yr”。更详细的参见雅虎股票 API f 参数对照表 。
+2、通过API获取历史数据
+请求地址
+http://ichart.yahoo.com/table.csv?s=<string>&a=<int>&b=<int>&c=<int>&d=<int>&e=<int>&f=<int>&g=d&ignore=.csv
+参数
+s – 股票名称
+a – 起始时间，月
+b – 起始时间，日
+c – 起始时间，年
+d – 结束时间，月
+e – 结束时间，日
+f – 结束时间，年
+g – 时间周期。Example: g=w, 表示周期是’周’。d->’日’(day), w->’周’(week)，m->’月’(mouth)，v->’dividends only’
+一定注意月份参数，其值比真实数据-1。如需要9月数据，则写为08。
+3、通过API获取深沪股票数据
+雅虎的API是国际性的，支持查询国内沪深股市的数据，但代码稍微变动一下，如浦发银行的代号是：600000.SS。规则是：上海市场末尾加.ss，深圳市场末尾加.sz。
+ 
+Yahoo! Finance API
+
+ Trackback URL
+Yahoo-Finance API Moderne Broker-Portale bieten einem Investor die M?glichkeit, Kurse seiner Aktien bzw. Optionen abzurufen. Dort findet er in der Regel auch Kurs-Charts und Chart-Analyse-Kurven zu den unterschiedlichsten Zeitr?umen. Dem ein oder anderen privaten Investor sind diese Analysen vielleicht nicht ausreichend genug. Es mag unter ihnen Informatiker und Hobby-Programmierer geben, die den Wunsch ?u?ern, mit Kursdaten mathematische Analysen durchzuführen, um Indikatoren selbst zu berechnen. Nur wie gelangt ein Programmierer an die aktuellen und historischen Zahlen einzelner Aktienkurse? Dieser Beitrag soll die M?glichkeiten der Yahoo!Finance-Schnittstelle n?her bringen.
+Für das Ermitteln unterschiedlicher Kursdaten bietet Yahoo!Finance (auch für Deutschland ) verschiedene CSV-Export-Services an. CSV steht für “Comma Separated Values” und bedeutet hier nichts anderes, als dass die ganzen Kennzahlen (wie z.B. Schluss-Kurs oder Volumen) in reiner Textform mit Kommas und Zeilenumbrüchen getrennt ausgeliefert werden. Daten in solch einem Format kann ein Computerprogramm für Analysezwecke leicht verarbeiten. Im Folgenden werden die bekannten Schnittstellen genauer erl?utert und dazu passende Beispiele und PHP-Scripte pr?sentiert. Da mir keine offizielle API von Yahoo!Finance bekannt ist und ich die hier beschriebene Schnittstelle durch Ausprobieren und Studium ermittelt habe, kann ich für eine Vollst?ndigkeit des aufgezeigten Funktionsumfanges nicht garantieren. Für Hinweise bin ich daher sehr dankbar. Verwendet ein Entwickler die Services von Yahoo!Finance, so sollte er sich vorher die Nutzungsbedingungen (siehe auch ) genau durchlesen.
+Aktuelle Kursdaten ermitteln
+Ganz ehrlich, “aktuell” bedeutet bei der kostenlosen Yahoo!Finance-Schnittstelle leider eine Verz?gerung von 15 Minuten für NASDAQ Werte, bis hin zu 60 Minuten für andere B?rsenpl?tze (n?heres auf Yahoo!Finance ). Doch für die meisten Verwendungszwecken bzw. westlichen B?rsenkurse dürfte diese Verz?gerung kein Problem darstellen. Yahoo! bietet Kurse aus den unterschiedlichsten B?rsenpl?tzen an. Die Selektion des entsprechenden Handelsplatzes findet in der URL selbst, sowie in einem Anhang (Suffix) an der Symbolangabe statt. Im Kapitel “L?nderunterschiede” werden die Unterschiede aufgelistet. Zum besseren Verst?ndnis zeige ich hier nur die Basis-URL, welche vor allem für die US-B?rsenkurse gültig ist. Das Ergebnis ist eine Werteliste, die durch Kommas getrennt pr?sentiert wird. Die Serviceadressen für aktuelle Kursinformationen lautet http://finance.yahoo.com/d/quotes.csv? und nimmt die folgenden drei bekannten Parameter entgegen:
+Parameter	Beschreibung
+s=	Das Symbol des Wertpapiers wird mit dem Parameter “s” angegeben. Z.B. liefert hier “s=AAPL ” die aktuellen Kursdaten von Apple Inc. Eine Kombination mehrere durch ein Pluszeichen getrennte Symbole ist ebenfalls m?glich (zum Beispiel “s=AAPL+MSFT ” für Apple und Microsoft). Die Werte, getrennt durch Kommas, kommen dann jeweils in eine separaten Zeile pro Symbol zurück.
+f=	Die Format-Codes werden hier mit dem Parameter “f” angegeben. Dabei handelt es sich hier um einen Textzug mit lauter aneinandergereihten Kürzel. So gibt z.B. das Zeichen “s” an, dass das Symbol der Aktie ausgegeben werden soll. “n” liefert den Namen, “a” den aktuellen Anfrage-Kurs. Die Werte werden exakt in der Reihenfolge ausgegeben, wie sie hier angefordert werden. Eine Liste aller bekannten Format-Codes wird weiter unten um Kapitel “Die Format-Codes” aufgelistet. Beispiel: f=sna
+e=.csv	Die Exportart wird mit dem Parameter “e” angegeben. Hier sollte immer “e=.csv ” für ein “Comma Separated Values” Ergebnis übermittelt werden. Erfahrungen haben gezeigt, dass dieser Parameter wohl optional ist.
+Das folgende Beispiel ermittelt von Apple und Microsoft das Symbol, den Firmen-Namen, den aktuellen Anfrage-Kurs und die dazu geh?rige Zeit ab. Dabei sind Zeit und Kurswert immer l?nderspezifisch zu verstehen (US-Zeit und Dollar). Wenn Sie diese URL in den Browser eingeben, k?nnen Sie das Ergebnis abspeichern. Danach k?nnen Sie die Rohdaten in einem Texteditor ?ffnen und betrachten (nicht mit Excel ?ffnen, da hier die Formatierung nicht ersichtlich wird).
+http://finance.yahoo.com/d/quotes.csv?s=AAPL+MSFT&f=snat1 --- "AAPL","APPLE INC",151.47,"3:31pm" "MSFT","MICROSOFT CP",29.09,"3:31pm"
+Ein Programm kann nun diese Daten in einem mehrdimensionalen Array ablegen. Dabei enthalten die Spalten die Inhalte der Werte, welche durch die Format-Codes angefordert wurden. Die Zeilen bilden jeweils das Zahlentupel eines Wertpapiers ab. Eine PHP-Funktion zur Ermittlung der Kursdaten k?nnte somit folgenderma?en aussehen:
+<?php define ("QUOTES_URL", "http://finance.yahoo.com/d/quotes.csv?"); function loadYahooQuotes ($symbol, $tags) { $lineCount = 0; $stocks = array(); // load the stock quotes: we are opening it for reading // http://finance.yahoo.com/d/quotes.csv?s= STOCK SYMBOLS &f= FORMAT TAGS $URL = QUOTES_URL."s=$symbol&f=$tags&e=.csv"; $fileHandle = fopen ($URL,"r"); if ($fileHandle) { // use the fgetcsv function to store quote values into an array $lineValues // one symbol in one line do { $stockValues = fgetcsv ($fileHandle, 999999, ","); if ($stockValues) { $lineCount++; $stocks[$lineCount] = $stockValues; } } while ($stockValues); fclose ($fileHandle); } else { // ERROR-Message in the array $stocks[0][0] = "ERROR"; $stocks[0][1] = "No data found."; } return $stocks; } ?>
+Devisen
+Sie k?nnen nicht nur einzelne Aktienkurse erfragen, sondern auch Devisenkurse. Dazu müssen Sie an der oben vorgestellten Adresse als Symbol-Parameter ein spezielles Konstrukt der Form AB=X übermitteln. Hier steht der Buchstabe A für die erste zu vergleichende W?hrung und der Buchstabe B dann natürlich für die zweite W?hrung. X steht wohl für Exchange und wird nicht ersetzt. Wollen Sie mehrere W?hrungen abfragen, k?nnen mehrere Konstrukte mittels dem Pluszeichen “+ ” aneinander geh?ngt werden. Folgendes Beispiel soll dies verdeutlichen:
+http://quote.yahoo.com/d/quotes.csv?s=USDCAD=X+JPYUSD=X&f=nl1d1t1 --- "USD to CAD",1.0088,"4/4/2008","5:02pm" "JPY to USD",0.0098,"4/4/2008","5:26pm"
+Die Kürzel der W?hrungen bestehen aus drei Buchstaben und werden hier aufgelistet:
+Land	Kürzel
+Afganistan Afghani	AFA
+Albanian Lek	ALL
+Algerian Dinar	DZD
+Argentinian Peso	ARS
+Aruban Florin	AWG
+Australian Dollar	AUD
+Austrian Schilling	ATS
+Bahraini Dinar	BHD
+Bangladesh Taka	BDT
+Barbados Dollar	BBD
+Belgian Franc	BEF
+Belize Dollar	BZD
+Bermuda Dollar	BMD
+Bhutan Ngultrum	BTN
+Bolivian Boliviano	BOB
+Botswana Pula	BWP
+Brazilian Real	BRL
+British Pound	GBP
+Brunei Dollar	BND
+Bulgarian Lev	BGN
+Cambodian Riel	KHR
+Canadian Dollar	CAD
+Cape Verde Escudo	CVE
+Cayman Islands Dollar	KYD
+CFA Franc (BCEAO)	XOF
+CFA Franc(BEAC)	XAF
+CFP Franc	XPF
+Chilean Peso	CLP
+Colombian Peso	COP
+Comoros Franc	KMF
+Costa Rican Colon	CRC
+Croatian Kuna	HRK
+Cuban Peso	CUP
+Cypriot Pound	CYP
+Czech Koruna	CZK
+Danish Krone	DKK
+Djibouti Franc	DJF
+Dominican Peso	DOP
+Dutch Guilder	NLG
+East Caribbean Dollar	XCD
+Egyptian Pound	EGP
+El Salvador Colon	SVC
+Estonian Kroon	EEK
+Ethiopian Birr	ETB
+Euro	EUR
+Fiji Dollar	FJD
+Finnish Markka	FIM
+French Franc	FRF
+Gambia Dalasi	GMD
+German Mark	DEM
+Ghanaian Cedi	GHC
+Gibraltar Pound	GIP
+Greek Drachma	GRD
+Guatemala Quetzal	GTQ
+Guinea Franc	GNF
+Guyana Dollar	GYD
+Haitian Gourde	HTG
+Honduras Lempira	HNL
+Hong Kong Dollar	HKD
+Hungarian Forint	HUF
+Iceland Krona	ISK
+Indian Rupee	INR
+Indonesian Rupiah	IDR
+Irish Punt	IEP
+Israeli Shekel	ILS
+Italian Lira	ITL
+Jamaican Dollar	JMD
+Japanese Yen	JPY
+Jordanian Dinar	JOD
+Kenyan Shilling	KES
+Kuwaiti Dinar	KWD
+Laos Kip	LAK
+Latvian Lats	LVL
+Lebanese Pound	LBP
+Lesotho Loti	LSL
+Lithuanian Litas	LTL
+Malagasy Franc	MGF
+Malawi Kwacha	MWK
+Malaysian Ringgit	MYR
+Maldives Rufiyan	MVR
+Maltese Pound	MTL
+Mauritania Ouguiya	MRO
+Mauritius Rupee	MUR
+Mexican Peso	MXN
+Mongolian Tugrik	MNT
+Moroccan Dirham	MAD
+Mozambique Metical	MZM
+Myanmar Kyat	MMK
+Namibian Dollar	NAD
+Nepal Rupee	NPR
+Netherlands Antilles Guilder	ANG
+New Zealand Dollar	NZD
+Nicaraguan Cordoba	NIO
+Nigerian Naira	NGN
+Norwegian Krone	NOK
+Oman Rial	OMR
+Pakistani Rupee	PKR
+Papua New Guinea Kina	PGK
+Peruvian Sol	PEN
+Philippines Peso	PHP
+Polish Zloty	PLN
+Portuguese Escudo	PTE
+Qatari Rial	QAR
+Renmimbi Yuan	CNY
+Romanian Leu	ROL
+Russian Ruble	RUB
+Salomon Islands Dollar	SBD
+Sao Tome & Principe Dobra	STD
+Saudi Arabian Riyal	SAR
+Seychelles Rupee	SCR
+Sierra Leone Leone	SLL
+Singapore Dollar	SGD
+Slovak Koruna	SKK
+Slovenian Tolar	SIT
+South African Rand	ZAR
+South Korean Won	KRW
+Spanish Peseta	ESP
+Sri Lanka Rupee	LKR
+St. Helena Pound	SHP
+Sudanese Dinar	SDD
+Surinam Guilder	SRG
+Swaziland Lilangeni	SZL
+Swedish Krona	SEK
+Swiss Franc	CHF
+Syria Pound	SYP
+Taiwan New Dollar	TWD
+Tanzanian Shilling	TZS
+Thai Baht	THB
+Tonga Isl Pa’anga	TOP
+Trinidad Dollar	TTD
+Tunisian Dinar	TND
+Turkish Lira	TRL
+Ugandan Shilling	UGX
+Ukraine Hryvnia	UAH
+United Arab Emirates Dirham	AED
+US Dollar	USD
+Vanuatu Vatu	VUV
+Venezuelan Bolivar	VEB
+Vietnam Dong	VND
+Western Samoa Tala	WST
+Zambia Kwacha	ZMK
+Zimbabwean Dollar	ZWD
+Die Format-Codes
+Für den Parameter der Formate-Codes (”f”) stehen eine ganze Reihe akzeptierter Format-Tags zur Verfügung. Viele sind dabei wohl redundant und werden hier einfach zusammengefasst (z.B. “a” und “b2″ für Anfrage-Kurs). Die folgende Tabelle listet alle bekannten Codes auf.
+Achtung: In einigen F?llen liefert Yahoo!Finance mehrstellige Werte zurück, die ebenfalls mit Kommas getrennt dargestellt werden. Dies ist an sich ungeschickt, da es für Sie als Programmierer schwierig wird, die Kommas zwischen den einzelnen Werten von den Kommas in einem Wert zu unterscheiden. Hier empfehle ich, diese Parameter getrennt abzufragen.
+Code	Bedeutung
+a, a0, a4	Ask (sometimes) – Nicht alle Kursanfragen liefern hier einen Wert.
+a3, b2	Ask – incl. Pre- und Post-Market Werte
+a1	- unknown -
+a2	Average Daily Volume
+a5	Ask Size
+Achtung: hier wird der Wert unter Umst?nden in Zahlengruppen, getrennt durch ein Komma zurückgeliefert! Die Anzahl der durch Komma getrennten Gruppen variiert.
+b, b0	Bid (sometimes) – Nicht alle Kursanfragen liefern hier einen Wert.
+b1, b3	Bid – incl. Pre- und Post-Market Werte
+b4	Book Value
+b6	Bid Size
+Achtung: hier wird der Wert unter Umst?nden in Zahlengruppen, getrennt durch ein Komma zurückgeliefert! Die Anzahl der durch Komma getrennten Gruppen variiert.
+c, c2, q1	Change & Percent Change
+c1, c0, c6, c7	Change
+c3	Commission
+c4	Currency
+c5	- unknown -
+c8	After Hours Change
+d, d0	Dividend/Share
+d1	Last Trade Date
+d2	Trade Date
+d3	Last Trade Date (text)
+e, e0	Earnings/Share
+e1	Error Indication (returned for symbol changed / invalid)
+e2	Verfallsdatum bei Optionsscheinen
+e3	- unknown -
+e4	- unknown -
+e7	EPS Estimate Current Year
+e8	EPS Estimate Next Year
+e9	EPS Estimate Next Quarter
+f, f0, f1, f2, f3, f4, f5, g2	- HTML Fragment mit Company name, market place und Trade Link -
+f6	Float Shares
+Achtung: hier wird der Wert unter Umst?nden in Zahlengruppen, getrennt durch ein Komma zurückgeliefert! Die Anzahl der durch Komma getrennten Gruppen variiert.
+f7, f8,	- HTML Fragment mit Trade-Link -
+g, g0	Day’s Low
+g1	Holdings Gain Percent
+g3	Annualized Gain
+g4, g6	Holdings Gain
+g5	Holdings Gain Percent
+h, h0	Day’s High
+h1, h2, h3, h4, h5, h6	- HTML Fragment -
+i, i0	More Info
+i2	- unknown -
+i3	- unknown -
+i4	- unknown -
+i5	Order Book
+i6	- unknown -
+i7, l1, l7, l9, q2, v2, y2	Last Trade (price only)
+j, j0	52-week Low
+j1	Market Capitalization
+j2	Shares Outstanding
+Achtung: hier wird der Wert unter Umst?nden in Zahlengruppen, getrennt durch ein Komma zurückgeliefert! Die Anzahl der durch Komma getrennten Gruppen variiert.
+j3	- unknown -
+j4	EBITDA
+j5	Change From 52-week Low
+j6	Percent Change From 52-week Low
+k, k0	52-week High
+k1	Last Trade (with -unknown-)
+k2	Change Percent (with -unknown-)
+k3	Last Trade Size
+Achtung: hier wird der Wert unter Umst?nden in Zahlengruppen, getrennt durch ein Komma zurückgeliefert! Die Anzahl der durch Komma getrennten Gruppen variiert.
+k4	Change From 52-week High
+k5	Percebt Change From 52-week High
+l, l0, n1, n5, y1	Last Trade (with Date)
+l2	High Limit
+l3	Low Limit
+l4	- unknown -
+l5	- unknown -
+l6	- unknown -
+m, m0	Day’s Range
+m1	- unknown -
+m2	- unknown – (Day?) Range
+m3	50-day Moving Average
+m4	200-day Moving Average
+m5	Change From 200-day Moving Average
+m6	Percent Change From 200-day Moving Average
+m7	Change From 50-day Moving Average
+m8	Percent Change From 50-day Moving Average
+n, n0	Name
+n2	- unknown -
+n3	- unknown -
+n4	Notes
+n6	- unknown -
+n7	- unknown -
+n8	- unknown -
+n9	- unknown -
+o, o0	Open
+o1, o2	Open Interest bei Optionsscheinen
+o4	- unknown -
+o5	- unknown -
+p, p0, p8	Previous Close
+p1	Price Paid
+p2, p4	Change in Percent
+p3	- unknown -
+p5, p9	Price/Sales
+p6	Price/Book
+q, q0	Ex-Dividend Date
+q3	- HTML Fragment für Zeitraumauswahl -
+q4	- HTML Fragment für Auswahl des Grafentyps -
+q5	- HTML Fragment für Auswahl der Skalierung -
+q6	- HTML Fragment für Auswahl der Chart-Gr??e -
+q7	- HTML Fragment für Auswahl des Moving Avg. -
+q8	- HTML Fragment für Auswahl des EMA -
+q9	- HTML Fragment für Vergleichs-Formular -
+r, r0	P/E Ratio
+r1	Dividend Pay Date
+r2	- unknown -
+r3	- HTML Fragment für Auswahl der Indikatoren -
+r4	- HTML Fragment für Auswahl der Overlays -
+r5	PEG Ratio
+r6	Price/EPS Estimate Current Year
+r7	Price/EPS Estimate Next Year
+r9	- unknown -
+s, s0, s2, s4	Symbol
+s1	Shares Owned
+s3	Bezugspreis bei Optionsscheinen
+s6	Revenue ?
+s7	Short Ratio
+t, t0, t2, u, u0, u2, u3	- HTML Fragment für ein Chart-Bild -
+t1	Last Trade Time
+t3	- unknown -
+t4	- unknown -
+t5	- unknown -
+t6	- HTML Fragment mit Trade-Link -
+t7	Ticker Trend
+t8	1 yr Target Price
+v, v0, v6	Volume
+v3	- unknown -
+v4	- unknown -
+v5	- unknown -
+v1	Holdings Value
+v7	- unknown -
+w, w0	52-week Range
+w1	Day’s Value Change
+w4	- unknown -
+x, x0	Stock Exchange
+y, y0	Dividend Yield
+z2	- HTML Fragment -
+z3	- liefert “Oops!” -
+H?here Indexwerte führen nur noch zu einer Wiederholung der Inhalte. Vermutlich sollen die Codes zweistellig sein (Buchstabe + Zahl). F?llt die Zahl weg, so wir automatisch der Index 0 angenommen.
+Daytrading-Daten
+Leider bietet Yahoo!Finance nur die letzten 100 Tages-Kurswerte zum Ermittlungszeitpunkt an. Auch hier wirkt die Verz?gerung von 15-60 Minuten, wie im Abschnitt “Aktuelle Kursdaten” beschrieben. Die Serviceadresse für die Daytrading-Daten lautet http://logtrade.finance.vip.ukl.yahoo.com/lastTrades? und nimmt folgende drei bekannte Parameter entgegen:
+Parameter	Beschreibung
+s=	Das Symbol des Wertpapiers wird mit dem Parameter “s” angegeben. Z.B. liefert hier “s=AAPL ” die letzten 100 Daytrading-Daten von Apple Inc.
+output=user	Der Sinn dieses Parameters ist leider noch nicht bekannt. Für weitere Hinweise bin ich sehr dankbar.
+i=eu	Auch hier ist mir der Sinn des Parameters noch nicht bekannt.
+Das Ergebnis einer solchen Abfrage liefert eine Liste mit Wertegruppen – eine Gruppe für jeden Trade. Ein solches Tupel enth?lt den Trading-Zeitpunkt, den Kurswert und die Volumina des Trades.
+Historische Kursdaten
+Für ein Wertpapier stehen bei Yahoo ebenfalls historische Daten zur Verfügung. Die Service-URL hierfür lautet http://ichart.finance.yahoo.com/table.csv? und besitzt Parameter für das Symbol, sowie für das Zeitintervall, innerhalb ein Entwickler die t?glichen bzw. w?chentlichen Kursdaten ermitteln will:
+Parameter	Beschreibung
+a=	Start-Monat -1 (Januar ist hier der Wert “0″)
+b=	Start-Tag
+c=	Start-Jahr
+d=	End-Monat -1 (Januar ist hier der Wert “0″)
+e=	End-Tag
+f =	End-Jahr
+g=	Chart-Abstufung (d=t?gliche Werte, w=w?chentliche Werte, m=monatliche Werte, v=Dividendenausschüttungen)
+s=	Symbol des Aktienkurses
+ignore=.cvs	(konstanter Wert, aber optional)
+y=	Verschiebung um eine angegebene Anzahl an Tagen/Wochen/Monaten. Macht eigentlich keinen Sinn, da oben bereits ein Intervall angegeben wurde. Trotzdem unterscheiden sich z.B. die Volumen-Werte eines Monats (g=m), wenn hier eine Verschiebung Y>0 angegeben wird. Für weitere Hinweise bin ich hier dankbar!
+Das Ergebnis besteht aus einer Liste t?glicher, w?chentlicher oder monatlicher Werte zu dem übermittelten Zeitraum. Die erste Zeile enth?lt die überschrift der einzelnen Spaltenwerte. In allen weiteren Zeilen liefert Yahoo!Finance danach das Datum, den Er?ffnungskurs, den h?chsten und tiefsten Kurswert, sowie den Tagesschlusskurs und das Handelsvolumen für jeden einzelnen Tag. Da diese Werte gegenüber Splits und Dividenden unbereinigt sind, liefert Yahoo! in der letzten Spalte “Adj. Close” noch bereinigte Schlusskurse. Ein bisschen anders sieht das Ergebnis aus, wenn als Chart-Abstufung der Wert “v” für die Dividendenausschüttungen angegeben wird. Dann werden nur noch zwei Spalten mit einem Datum sowie dem Wert selbst zurückgeliefert. Hier noch zwei Beispiele mit den ersten paar Zeilen der Ergebnisse:
+http://ichart.finance.yahoo.com/table.csv?s=AAPL&d=3&e=3&f=2008&g=d&a=8&b=7&c=1984&ignore=.cvs --- Date,Open,High,Low,Close,Volume,Adj Close 2008-04-02,148.78,151.20,145.85,147.49,37253700,147.49 2008-04-01,146.30,149.66,143.61,149.53,36846400,149.53 2008-03-31,143.27,145.71,142.52,143.50,27418300,143.50 2008-03-28,141.80,144.65,141.60,143.01,25521800,143.01 ...
+http://itable.finance.yahoo.com/table.csv?s=AAPL&d=3&e=3&f=2008&g=v&a=8&b=7&c=1984&ignore=.cvs --- Date,Dividends 1995-11-21,0.030000 1995-08-16,0.030000 1995-05-26,0.030000 ...
+Für die programmatische Auswertung dieser Daten bietet sich auch hier das Array als Ergebnistr?ger an. In jeder Zeile k?nnen so die Werte eines Tages (bzw. einer Woche, eines Monats oder der Dividenden) abgelegt werden. Folgende PHP-Funktion soll dies verdeutlichen:
+<?php define ("HISTORY_QUOTES_URL", "http://ichart.yahoo.com/table.csv?"); function loadHistoricalYahooQuotes ($symbol, $startDay, $startMonth, $startYear, $endDay, $endMonth, $endYear, $step) { $lineCount = 0; $days = array(); // modify parameters $sM=$startMonth-1; $eM=$endMonth-1; // load the historical stock quotes: we are opening it for reading // http://ichart.yahoo.com/table.csv?s= SYMBOL.COUNTRY &a,b,c START $d,e,f ENDE $g d=daily/w=weekly/m=monthly/v=dividends $URL = HISTORY_QUOTES_URL."s=$symbol&a=$sM&b=$startDay&c=$startYear&d=$eM&e=$endDay&f=$endYear&g=$step&y=0&ignore=.cvs"; $fileHandle = fopen ($URL,"r"); if ($fileHandle) { // use the fgetcsv function to store quote values into a array $lineValues // store one symbol in one line do { $stockValues = fgetcsv ($fileHandle, 999999, ","); if ($stockValues) { $lineCount++; $days[$lineCount] = $stockValues; } } while ($stockValues); // close handle fclose ($fileHandle); } else { $days[0][0] = "ERROR"; $days[0][1] = "No data found."; } return $days; } ?>
+L?nderunterschiede
+An der B?rse werden nicht nur Aktien in unterschiedlichen W?hrungen gehandelt, sondern auch Nebenwerte wie beispielsweise Optionsscheine. Der Handel solcher Wertpapiere ist meist auf ein Land bzw. B?rsenplatz beschr?nkt. Aus diesem Grund bietet Yashoo!Finance auch unterschiedliche Serviceadressen an. In diesem Artikel wurden bisher nur die Adressen für US-B?rsendaten aufgezeigt. So kann unter der URL http://finance.yahoo.com/d/quotes.csv? der aktuelle Kurs einer Aktie in US-Dollars ermittelt werden. Wollen Sie hingegen einen Kurs aus dem deutschen Raum ermitteln, steht Ihnen die URL http://de .finance.yahoo.com/d/quotes.csv? zur Verfügung.
+Die folgende Tabelle zeigt die Adressen (URL) zum Yahoo!Finance-Service für aktuelle B?rsenkurse. In der ersten Spalte werden auch die Symbol-Suffixe aufgelistet, welche für eine aktive B?rsenplatz-Wahl an die Symbolangabe geh?ngt werden k?nnen (z.B. “AAPL.DE ” für den XETRA-Kurs des Apple-Aktie). Ein Besuch auf die Webseite von Yahoo! Finance hilft hier bei der Auswahl der richtigen Symbolbezeichnung.
+Land & Suffix	URLs
+Argentinien
+.BA (Buenos Aires)
+http://finance.yahoo.com/d/quotes.csv?
+http://ar.finance.yahoo.com/d/quotes.csv?
+Australien
+.AX (Australia)
+http://au.finance.yahoo.com/d/quotes.csv?
+Belgien
+.BR (Brussels)
+http://finance.yahoo.com/d/quotes.csv?
+Brasilien
+.SA (S?o Paulo)
+http://finance.yahoo.com/d/quotes.csv?
+http://br.finance.yahoo.com/d/quotes.csv?
+D?nemark
+.CO (Copenhagen)
+http://finance.yahoo.com/d/quotes.csv?
+http://dk.finance.yahoo.com/d/quotes.csv?
+Deutschland
+.BE (Berlin-Bremen)
+.DU (Düsseldorf)
+.F (Frankfurt)
+.HM (Hamburg)
+.HA (Hanover)
+.MU (München)
+.SG (Stuttgart)
+.DE (XETRA)
+http://de.finance.yahoo.com/d/quotes.csv?
+China
+.SS (Shanghai)
+.SZ (Shenzhen)
+http://finance.yahoo.com/d/quotes.csv?
+http://cn.finance.yahoo.com/d/quotes.csv?
+England
+.L (London)
+http://uk.finance.yahoo.com/d/quotes.csv?
+Frankreich
+.PA (Paris)
+http://finance.yahoo.com/d/quotes.csv?
+http://fr.finance.yahoo.com/d/quotes.csv?
+Hong Kong
+.HK (Hong Kong)
+http://hk.finance.yahoo.com/d/quotes.csv?
+Indien
+.BO (Bombay)
+.NS (Nationale B?rse Indien)
+http://in.finance.yahoo.com/d/quotes.csv?
+Indonesien
+.JK (Jakarta)
+http://sg.finance.yahoo.com/d/quotes.csv?
+Irland
+.IR (Irish)
+http://uk.finance.yahoo.com/d/quotes.csv?
+Israel
+.TA (Tel Aviv)
+http://finance.yahoo.com/d/quotes.csv?
+Italien
+.MI (Milano)
+http://finance.yahoo.com/d/quotes.csv?
+http://it.finance.yahoo.com/d/quotes.csv?
+Kanada
+.TO (Toronto)
+.V (TSX Venture Exchange)
+http://ca.finance.yahoo.com/d/quotes.csv?
+Korea (Süd)
+.KS (Korea)
+.KQ (KOSDAQ)
+http://kr.finance.yahoo.com/d/quotes.csv?
+Malaysien
+.KL (Kuala Lumpur) ?
+http://sg.finance.yahoo.com/d/quotes.csv?
+Mexico
+.MX (Mexico)
+http://finance.yahoo.com/d/quotes.csv?
+Neu Seeland
+.NZ (New Zealand)
+http://au.finance.yahoo.com/d/quotes.csv?
+Niederlande
+.AS (Amsterdam)
+http://finance.yahoo.com/d/quotes.csv?
+Norwegen
+.OL (Oslo)
+http://finance.yahoo.com/d/quotes.csv?
+http://no.finance.yahoo.com/d/quotes.csv?
+?sterreich
+.VI (Vienna)
+http://finance.yahoo.com/d/quotes.csv?
+Pakistan
+.KA (Karachi) ?
+http://finance.yahoo.com/d/quotes.csv?
+Portugal
+.LS (Lissabon)
+http://finance.yahoo.com/d/quotes.csv?
+Schweden
+.ST (Stockholm)
+http://finance.yahoo.com/d/quotes.csv?
+http://se.finance.yahoo.com/d/quotes.csv?
+Schweiz
+.SW (Swiss)
+.VX (Virt-X)
+http://finance.yahoo.com/d/quotes.csv?
+Singapore
+.SI (Singapore)
+http://sg.finance.yahoo.com/d/quotes.csv?
+Spanien
+.BC (Barcelona)
+.BI (Bilbao)
+.MF (Madrid Fixed Income Market)
+.MC (Madrid SE C.A.T.S.)
+.MA (Madrid)
+http://es.finance.yahoo.com/d/quotes.csv?
+Taiwan
+.TWO (OTC B?rse Taiwan)
+.TW (Taiwan)
+http://sg.finance.yahoo.com/d/quotes.csv?
+Thailand
+.BK (Bangkok)
+http://sg.finance.yahoo.com/d/quotes.csv?
+USA
+kein Suffix für AMEX, NASDAQ und NYSE
+.OB (OTC Bulletin Board Market)
+.PK (Pink Sheets)
+http://finance.yahoo.com/d/quotes.csv?
+Download
+Die Klasse Finance_API_Yahoo bietet einen einfachen Zugriff auf die hier beschriebene Schnittstelle. Mit ihr lassen sich aktuelle, sowie historische Kursdaten ermitteln. Das Ergebnis wird in einem zweidimensionalen Array zurückgeliefert (siehe Beispiele im Text). Für die Package-Struktur diente das Zend-Framework als Vorlage. Somit ist eine einfache Integration in dieses gew?hrleistet.
+Yahoo! Finance API, Version 1.0
+
+【例子】
+http://download.finance.yahoo.com/d/quotes.csv?s=000300.ss&f=d1ohgl1v
+d1  Last Trade Date 交易日期
+o   Open  开盘价
+h   Day’s High 最高价
+g   Day’s Low  最低价
+l1  Last Trade (with Date) 最后一次交易价格
+v   Volume  交易量
+k   52-week High   年内最高价
+j   52-week Low  年内最低价
+ 
+ 从 Yahoo 获取
+历史数据
+
+HTML Output: http://finance.yahoo.com/q/hp?s=300072.sz&d=7&e=23&f=2010&a=5&b=11&c=2010
+CSV Output: http://ichart.finance.yahoo.com/table.csv?s=300072.sz&d=7&e=23&f=2010&a=5&b=11&c=2010
+由于历史原因，也可以用地址 http://table.finance.yahoo.com/table.csvs: 股票代码 (e.g.  002036.SZ 300072.SZ 600036.SS 等)
+c-a-b: 起始日期年、月、日 (月份的起始索引为0) 2010-5-11 = 2010年6月11日
+f-d-e: 结束日期年、月、日 (月份的起始索引为0)  2010-7-23 = 2010年8月23日
+g: 时间周期。d=每日，w=每周，m=每月，v=只返回除权数据
+省略所有参数，只制定股票代码时，返回所有历史数据
+
+“实时”数据
+
+http://download.finance.yahoo.com/d/quotes.csv?s=300072.SZ+600036.SS&f=spl1d1t1c1ohg (f: 指定返回数据的格式)s: 股票代码
+l: 最后成交价格和时间 。l1: 最后成交价格；d1: 最后交易日期；t1: 最后交易时间
+p: 昨日收盘价；o: 开盘价；h: 最高价；g: 最低价；c1: 涨幅
+v: 成交量；a2: 平均每日成交量
+j: 52周最低价；j5: 52周价格变动 j6: 52周涨幅 （相对最低价）
+k: 52周最高价；k4: 52周价格变动 k5: 52周涨幅 （相对最高价）
+m3: MA50；m4: MA20；m5:

@@ -1,0 +1,95 @@
+http://www.jianshu.com/p/85d563d326a9
+Yahoo! Finance财经数据PYTHON临时读取方法
+
+Yahoo! Finance提供国内外财经数据，PYTHON通常借助于pandas或者matplotlib进行数据读取。
+
+由于2017年5月16日Yahoo!单方面进行了API升级，原数据接口已下线。
+
+原URL格式：https://chart.yahoo.com/table.csv?s=IBM
+现调整为：https://query1.finance.yahoo.com/v7/finance/download/IBM?period1=1492611801&period2=1495203801&interval=1d&events=history&crumb=NMhMTCv7QpM
+
+
+yahoo.jpg
+在pandas及matplotlib yahoo finance补丁发布前，可通过本文提供的临时解决方法提取数据。
+
+原数据提取方法一：
+
+import pandas.io.data as web
+IBMStock = web.DataReader(name="IBM", data_source="yahoo",start="2000-1-1")
+原数据提取方法二：
+
+import requests
+
+s = requests.Session()
+r = s.get("https://chart.yahoo.com/table.csv?s=IBM",verify=False)
+原数据提取方法三：
+
+from matplotlib.finance import quotes_historical_yahoo_ochl
+
+date1=(2013, 1, 1)
+date2=(2013, 12,31)
+price=quotes_historical_yahoo_ochl('IBM', date1, date2)
+PYTHON临时解决方案：
+Step1. 通过浏览器获取访问yahoo时的cookie值
+
+https://finance.yahoo.com/quote/IBM/history?p=IBM
+
+Chrome
+
+
+cookies.jpg
+Step2. 右键点击download，取得crumb值
+
+https://query1.finance.yahoo.com/v7/finance/download/IBM?period1=1492611801&period2=1495203801&interval=1d&events=history&crumb=NMhMTCv7QpM
+
+
+crumb.jpg
+Step3. 使用unix time替换起止日期
+
+代码示例(Python 2.7.13 |Anaconda 4.3.1 (64-bit))：
+
+# -*- coding: utf-8 -*-
+"""
+Created on Fri May 19 2017
+
+@author: vincentqiao
+"""
+
+import requests
+import time
+import pandas as pd
+import matplotlib.pyplot as plt
+
+def datetime_timestamp(dt):
+     time.strptime(dt, '%Y-%m-%d %H:%M:%S')
+     s = time.mktime(time.strptime(dt, '%Y-%m-%d %H:%M:%S'))
+     return str(int(s))
+
+s = requests.Session()
+
+#Replace B=xxxx
+cookies = dict(B='c650m5hchrhii&b=3&s=tk')
+
+#Replace crumb=yyyy
+crumb = 'NMhMTCv7QpM'
+
+begin = datetime_timestamp("2014-01-01 09:00:00")
+
+end = datetime_timestamp("2017-04-30 09:00:00")
+
+r = s.get("https://query1.finance.yahoo.com/v7/finance/download/IBM?period1="+begin+"&period2="+end+"&interval=1d&events=history&crumb="+crumb,cookies=cookies,verify=False)
+
+f = open('IBM.csv', 'w')
+f.write(r.text)
+f.close()    
+
+
+es = pd.read_csv('IBM.csv', index_col=0,parse_dates=True, sep=",", dayfirst=True)
+
+data = pd.DataFrame({"IBM" : es["Adj Close"][:]}) 
+
+print(data.info())
+
+data.plot(subplots=True, grid=True, style="b", figsize=(8, 6))
+
+plt.show()
