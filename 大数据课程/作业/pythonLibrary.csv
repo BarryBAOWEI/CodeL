@@ -1,4 +1,15 @@
 name,description,address
+CPython ,"The original implementation of Python, written in C.",https://www.python.org/download/
+IronPython ,A fast Python implementation for .NET and Mono.,http://www.codeplex.com/wikipage?ProjectName=IronPython
+Jython ,A 100 % Pure Java implementation of the Python language.,http://sourceforge.net/projects/jython/
+Python for .NET ,"Package gives nearly seamless integration with .NET Common Language Runtime: CLR. Strong scripting tool, allows scripting or building full programs in Python, using .NET services and components coded in any language targeting CLR: Managed C++, C#, VB, JScript.",http://pythonnet.sourceforge.net/
+Stackless Python ,"An experimental implementation that supports continuations, generators, microthreads, and coroutines.",http://www.stackless.com/
+Hap Python Remote Debugger ,A remote debugger and IDE that can also be used for local debugging.,http://hapdebugger.sourceforge.net/
+PyCrust - The Flakiest Python Shell ,"An interactive, graphical Python shell written in Python using wxPython.",http://sourceforge.net/projects/pycrust/
+Pymerase ,"A tool intended to generate a python object model, relational database, and an object-relational model connecting the two using UML or XML. However, it has been extended to also output GUI widgets and can be easily extended to output whatever else you might like. [Open source, MIT License]",http://pymerase.sourceforge.net/
+PyReverse ,"A set of tools for reverse engineering Python code, including creation of files readable by ArgoUML. Project information, downloads, and bug-track details. [Open Source, GPL]",http://www.logilab.org/2560/
+Tixapps Applications Framework ,"Tixapps applications are a suite of development applications that run with  Tk/Tcl or Python, using the Tix widget set. [Open Source, BSD-like]",http://tix.sourceforge.net/Tixapps/
+Winpdb ,"An advanced python debugger, with support for smart breakpoints, multiple threads, namespace modification, embedded debugging and encrypted communication.",http://winpdb.org/
 Data Structures and Algorithms with Object-Oriented Design Patterns in Python ,The primary goal of this book is to promote object-oriented design using Python and to illustrate the use of the emerging object-oriented design patterns.A secondary goal of the book is to present mathematical tools just in time. Analysis techniques and proofs are presented as needed and in the proper context.,http://www.brpreiss.com/books/opus7/html/book.html
 Dive Into Python 3 ,"By Mark Pilgrim, Guide to Python 3  and its differences from Python 2. Each chapter starts with a real code sample and explains it fully. Has a comprehensive appendix of all the syntactic and semantic changes in Python 3",http://www.diveintopython.net/
 Foundations of Python Network Programming ,"This book covers a wide range of topics. From raw TCP and UDP to encryption with TSL, and then to HTTP, SMTP, POP, IMAP, and ssh. It gives you a good understanding of each field and how to do everything on the network with Python.",http://rhodesmill.org/brandon/2011/foundations-of-python-network-programming/
@@ -17,14 +28,3 @@ Python Programming with the Java Class Libraries: A Tutorial for Building Web an
 Sams Teach Yourself Python in 24 Hours ,"By Ivan Van Laningham; Sams Publishing, 2000, ISBN 0672317354. Split into 24 hands-on, 1 hour lessons; steps needed to learn topic: syntax, language features, OO design and programming, GUIs (Tkinter), system administration, CGI. [Sams Publishing]",http://www.informit.com/store/product.aspx?isbn=0672317354
 Text Processing in Python ,"By David Mertz; Addison Wesley. Book in progress, full text, ASCII format. Asks for feedback. [author website, Gnosis Software, Inc.]",http://gnosis.cx/TPiP/
 XML Processing with Python ,"By Sean McGrath; Prentice Hall PTR, 2000, ISBN 0130211192, has CD-ROM. Methods to build XML applications fast, Python tutorial, DOM and SAX, new Pyxie open source XML processing library. [Prentice Hall PTR]",http://www.informit.com/store/product.aspx?isbn=0130211192
-Hap Python Remote Debugger ,A remote debugger and IDE that can also be used for local debugging.,http://hapdebugger.sourceforge.net/
-PyCrust - The Flakiest Python Shell ,"An interactive, graphical Python shell written in Python using wxPython.",http://sourceforge.net/projects/pycrust/
-Pymerase ,"A tool intended to generate a python object model, relational database, and an object-relational model connecting the two using UML or XML. However, it has been extended to also output GUI widgets and can be easily extended to output whatever else you might like. [Open source, MIT License]",http://pymerase.sourceforge.net/
-PyReverse ,"A set of tools for reverse engineering Python code, including creation of files readable by ArgoUML. Project information, downloads, and bug-track details. [Open Source, GPL]",http://www.logilab.org/2560/
-Tixapps Applications Framework ,"Tixapps applications are a suite of development applications that run with  Tk/Tcl or Python, using the Tix widget set. [Open Source, BSD-like]",http://tix.sourceforge.net/Tixapps/
-Winpdb ,"An advanced python debugger, with support for smart breakpoints, multiple threads, namespace modification, embedded debugging and encrypted communication.",http://winpdb.org/
-CPython ,"The original implementation of Python, written in C.",https://www.python.org/download/
-IronPython ,A fast Python implementation for .NET and Mono.,http://www.codeplex.com/wikipage?ProjectName=IronPython
-Jython ,A 100 % Pure Java implementation of the Python language.,http://sourceforge.net/projects/jython/
-Python for .NET ,"Package gives nearly seamless integration with .NET Common Language Runtime: CLR. Strong scripting tool, allows scripting or building full programs in Python, using .NET services and components coded in any language targeting CLR: Managed C++, C#, VB, JScript.",http://pythonnet.sourceforge.net/
-Stackless Python ,"An experimental implementation that supports continuations, generators, microthreads, and coroutines.",http://www.stackless.com/
